@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import { AuthContext} from "../../providers/AuthProvider";
 import { getAuth, updateProfile } from "firebase/auth";
@@ -9,6 +9,7 @@ const auth = getAuth(app);
 const SignUp = () => {
     const navigate = useNavigate();
     const {createUser, setLoading} = useContext(AuthContext)
+    const location = useLocation();
 
     const handleSignUp = event => {
         event.preventDefault();
