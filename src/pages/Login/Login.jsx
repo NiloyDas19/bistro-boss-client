@@ -4,6 +4,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
 import { useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
 
@@ -62,6 +63,9 @@ const Login = () => {
 
     return (
         <div className="hero min-h-screen bg-base-200">
+            <Helmet>
+                <title>Bistro Boss | Login</title>
+            </Helmet>
             <div className="hero-content flex-col lg:flex-row">
                 <div className="text-center lg:text-left">
                     <h1 className="text-5xl font-bold">Login now!</h1>
@@ -89,10 +93,10 @@ const Login = () => {
                             {/* <button onClick={handleValidateCaptcha} className='btn btn-outline mt-2 btn-xs'>Validate</button> */}
                         </div>
                         <div className="form-control mt-6">
-                            <input disabled={disabled} type="submit" value="Login" className="btn btn-primary" />
+                            <input disabled={disabled} type="submit" value="Login"  className="btn btn-primary" />
                         </div>
                     </form>
-                    <p className='text-center mb-5 text-red-500'><small>New Here? <Link to="/signUp">Create an account</Link></small></p>
+                    <p className='text-center mb-5 text-red-500'><small>New Here? <Link to="/signUp" state={location?.state}>Create an account</Link></small></p>
                 </div>
             </div>
         </div>

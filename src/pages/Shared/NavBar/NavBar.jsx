@@ -1,13 +1,49 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../providers/AuthProvider";
+import swal from "sweetalert";
 
 const NavBar = () => {
+    const {user, logOut, setLoading} = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleLogout = () => {
+        logOut()
+        .then(() => {
+            swal({
+                icon: "success",
+                title: "Logout Successful!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate(location?.state ? location?.state : "/");
+        })
+        .catch((error) => {
+            swal({
+                icon: "error",
+                title: "Oops...",
+                text: error.message,
+            });
+            setLoading(false);
+            console.log(error.message);
+        })
+    }
 
     const navOptions = <>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/menu">Our Menu</Link></li>
         <li><Link to="/order/salad">Order Food</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        
+        {
+            user ? 
+            <>
+                <li>{user?.displayName}</li>
+                <button className="btn btn-primary" onClick={handleLogout}>Logout</button>
+            </>
+            :
+            <><li><Link to="/login">Login</Link></li></>
+        }
+        <li><Link to="/secret">Secret</Link></li>
     </>
 
     return (

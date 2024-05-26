@@ -4,6 +4,7 @@ import swal from "sweetalert";
 import { AuthContext} from "../../providers/AuthProvider";
 import { getAuth, updateProfile } from "firebase/auth";
 import { app } from "../../firebase/firebase.config";
+import { Helmet } from "react-helmet-async";
 const auth = getAuth(app);
 
 const SignUp = () => {
@@ -65,6 +66,9 @@ const SignUp = () => {
 
     return (
         <div className="hero min-h-screen bg-base-200">
+            <Helmet>
+                <title>Bistro Boss | SignUp</title>
+            </Helmet>
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className="text-center lg:text-left">
                     <h1 className="text-5xl font-bold">Sign Up now!</h1>
