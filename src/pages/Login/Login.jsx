@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { AuthContext } from '../../providers/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 
 const Login = () => {
 
-    const captchaRef = useRef(null);
     const [disabled, setDisabled] = useState(true);
     const {signIn, setLoading} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -49,8 +48,10 @@ const Login = () => {
 
     }
 
-    const handleValidateCaptcha = () => {
-        const user_captcha_value = captchaRef.current.value;
+    const handleValidateCaptcha = (event) => {
+        const user_captcha_value = event.target.value;
+        // console.log(event);
+        console.log(user_captcha_value);
         if(validateCaptcha(user_captcha_value) == true){
             setDisabled(false);
         }
@@ -84,8 +85,8 @@ const Login = () => {
                             <label className="label">
                                 <LoadCanvasTemplate />
                             </label>
-                            <input ref={captchaRef} type="text" name="captcha" placeholder="Type here" className="input input-bordered" required />
-                            <button onClick={handleValidateCaptcha} className='btn btn-outline mt-2 btn-xs'>Validate</button>
+                            <input onBlur={handleValidateCaptcha}  type="text" name="captcha" placeholder="Type here" className="input input-bordered" required />
+                            {/* <button onClick={handleValidateCaptcha} className='btn btn-outline mt-2 btn-xs'>Validate</button> */}
                         </div>
                         <div className="form-control mt-6">
                             <input disabled={disabled} type="submit" value="Login" className="btn btn-primary" />
