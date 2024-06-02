@@ -1,15 +1,17 @@
 import { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-import { AuthContext} from "../../providers/AuthProvider";
+import { AuthContext } from "../../providers/AuthProvider";
 import { getAuth, updateProfile } from "firebase/auth";
 import { app } from "../../firebase/firebase.config";
 import { Helmet } from "react-helmet-async";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 const auth = getAuth(app);
 
 const SignUp = () => {
+    const axiosPublic = useAxiosPublic();
     const navigate = useNavigate();
-    const {createUser, setLoading} = useContext(AuthContext)
+    const { createUser, setLoading } = useContext(AuthContext)
     const location = useLocation();
 
     const handleSignUp = event => {
@@ -30,28 +32,37 @@ const SignUp = () => {
         }
 
         createUser(email, password)
-        .then(result => {
-            console.log("registration Successful", result.user);
+            .then(result => {
+                console.log("registration Successful", result.user);
                 // notify();
                 updateProfile(auth.currentUser, {
                     displayName: name,
                 }).then(() => {
                     // Profile updated!
-                    // ...
+                    const userInfo = {
+                        name,
+                        email,
+                    }
+                    result.user.displayName = name;
+                    console.log(userInfo);
+                    axiosPublic.post('/users', userInfo)
+                        .then(res => {
+                            if (res.data.insertedId) {
+                                swal({
+                                    icon: "success",
+                                    title: "Registration Successful!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        })
+                    navigate(location?.state ? location?.state : "/");
+                    event.target.reset();
                 }).catch((error) => {
                     // An error occurred
                     // ...
                     console.log(error.message);
                 });
-                result.user.displayName = name;
-                swal({
-                    icon: "success",
-                    title: "Registration Successful!",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                navigate(location?.state ? location?.state : "/");
-                event.target.reset();
             })
             .catch(error => {
                 swal({
@@ -95,7 +106,7 @@ const SignUp = () => {
                             <input type="password" name="password" placeholder="password" className="input input-bordered" required />
                         </div>
                         <div className="form-control mt-6">
-                            <input  type="submit" value="Sign Up" className="btn btn-primary" />
+                            <input type="submit" value="Sign Up" className="btn btn-primary" />
                         </div>
                     </form>
                     <p className='text-center mb-5 text-red-500'><small>Already have an account? <Link to="/login">log in here</Link></small></p>
